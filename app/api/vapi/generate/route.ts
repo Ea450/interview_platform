@@ -4,7 +4,7 @@ import { getRandomInterviewCover } from '@/lib/utils';
 import { db } from '@/firebase/admin';
 
 export async function GET() {
-    return Response.json({ success: true, data: "THANK YOU" }, { status: 200 })
+    return Response.json({ success: true, data: "Thank you!" }, { status: 200 })
 }
 
 export async function POST(request: Request) {
@@ -41,8 +41,8 @@ export async function POST(request: Request) {
 
         return Response.json({ success: true }, { status: 200 })
     } catch (error) {
-        console.log(error);
-        return Response.json({ success: false, error }, { status: 500 })
+        console.error('Error', error);
+        return Response.json({ success: false, error: error }, { status: 500 })
 
     }
 }
