@@ -1,6 +1,7 @@
 'use client'
 
 import { interviewer } from "@/constants";
+import { createFeedback } from "@/lib/actions/general.action";
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
 import Image from "next/image"
@@ -67,11 +68,13 @@ const Agent = ({ userName, userId, type, interviewId, questions }: AgentProps) =
 
     // handle a function to generate feedBack
     const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-        const { succes, id } = {
-            succes: true,
-            id: 'feedback-id'
-        }
-        if (succes && id) {
+
+        const { success, feedbackId: id } = await createFeedback({
+            interviewId: interviewId!,
+            userId: userId!,
+            transcript: messages,
+        })
+        if (success && id) {
             router.push(`/interview/${interviewId}/feedback`)
         } else {
             console.log('Error saving feedback');
@@ -81,10 +84,15 @@ const Agent = ({ userName, userId, type, interviewId, questions }: AgentProps) =
     }
     // handle finishing calls 
     useEffect(() => {
-        if (callStatus === CallStatus.FINISHED) {
 
+        if (callStatus === CallStatus.FINISHED) {
+            if (type === 'generate') {
+                router.push('/')
+            } else {
+                handleGenerateFeedback(messages)
+            }
         }
-    }, [messages, userId, userName, type])
+    }, [messages, userId, userName, type, callStatus])
 
     // handle call 
     const handleCall = async () => {
