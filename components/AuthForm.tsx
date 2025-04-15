@@ -16,11 +16,12 @@ import { auth } from "@/firebase/client"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, } from "firebase/auth";
 import { signIn, signUp } from "@/lib/actions/auth.action"
 
+
 const authFormSchema = (type: FormType) => {
     return z.object({
         name: type === "sign-up" ? z.string().min(3) : z.string().optional(),
         email: z.string().email(),
-        password: z.string().min(3)
+        password: z.string().min(8),
     })
 }
 
@@ -36,6 +37,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             name: "",
             email: "",
             password: "",
+
         },
     })
 
@@ -48,7 +50,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 const userCredential = await createUserWithEmailAndPassword(
                     auth,
                     email,
-                    password
+                    password,
                 );
 
                 const result = await signUp({

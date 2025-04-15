@@ -3,6 +3,7 @@
 import { auth, db } from "@/firebase/admin";
 import { cookies } from "next/headers";
 
+
 const ONE_WEEK = 60 * 60 * 24 * 7;
 
 export async function signUp(params: SignUpParams) {
@@ -77,6 +78,11 @@ export async function setSessionCookie(idToken: string) {
         sameSite: 'lax'
     })
 }
+export async function clearSessionCookie() {
+    const cookieStore = await cookies();
+    cookieStore.delete('session')
+}
+
 // Get current user from session cookie
 export async function getCurrentUser(): Promise<User | null> {
     const cookieStore = await cookies();
